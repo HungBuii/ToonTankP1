@@ -4,6 +4,7 @@
 #include "BasePawn.h"
 
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -31,17 +32,27 @@ void ABasePawn::BeginPlay()
 	
 }
 
-// Called every frame
-void ABasePawn::Tick(float DeltaTime)
+void ABasePawn::RotateTurret(FVector LookAtTarget)
 {
-	Super::Tick(DeltaTime);
+	// All vectors using are "World Space" not "Local Space"
+	FVector ToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
+	
+	// FRotator LookAtRotation = ToTarget.Rotation(); // Not use it because we will take care only "Yaw" rotation
+	FRotator LookAtRotation = FRotator(0.f, ToTarget.Rotation().Yaw, 0.f);
 
-}
+	// SetWorldRotation(): Put this component at the specified rotation in world space.
+	TurretMesh->SetWorldRotation // Not use "AddActorLocalRotation()"
+	(
+		FMath::RInterpTo(TurretMesh->GetComponentRotation(),
+			LookAtRotation,
+			UGameplayStatics::GetWorldDeltaSeconds(this),
+			25.f) // Interpolation speed, if the speed given is 0, then jump to the target. Speed higher -> spin faster 
+			); // Use "Interpolation" help tries to reach Target rotation based on Current rotation,
+	// giving a nice smooth feeling when rotating to Target rotation. (Target is Kismet Math Library)
 
-// Called to bind functionality to input
-void ABasePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	/* or
+	TurretMesh->SetWorldRotation(LookAtRotation); // it's ok but not giving a nice smooth feeling when rotating to Target rotation
+	 */
+	
 }
 

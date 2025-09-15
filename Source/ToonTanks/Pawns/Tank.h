@@ -17,6 +17,12 @@ class TOONTANKS_API ATank : public ABasePawn
 public:
 	ATank();
 	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+	
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,4 +32,14 @@ private:
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	class UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float Speed = 200.f;
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float TurnRate = 45.f;
+	
+	void Move(float Value);
+	void Turn(float Value);
+
+	APlayerController* TankPlayerController;
 };
