@@ -5,6 +5,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "ToonTanks/Projectile/Projectile.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -54,5 +55,24 @@ void ABasePawn::RotateTurret(FVector LookAtTarget)
 	TurretMesh->SetWorldRotation(LookAtRotation); // it's ok but not giving a nice smooth feeling when rotating to Target rotation
 	 */
 	
+}
+
+void ABasePawn::Fire()
+{
+	// FVector ProjectileSpawnPointLocation = ProjectileSpawn->GetComponentLocation();
+	// DrawDebugSphere(
+	// 	GetWorld(),
+	// 	ProjectileSpawnPointLocation,
+	// 	25.f,
+	// 	12,
+	// 	FColor::Green,
+	// 	false,
+	// 	3.f);
+
+	FVector Location = ProjectileSpawn->GetComponentLocation();
+	FRotator Rotation = ProjectileSpawn->GetComponentRotation();
+	
+	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, Location, Rotation);
+	Projectile->SetOwner(this);
 }
 

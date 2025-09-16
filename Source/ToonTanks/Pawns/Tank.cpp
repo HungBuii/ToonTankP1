@@ -60,11 +60,14 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// Axis Mapping
 	PlayerInputComponent->BindAxis("MoveForward", this, &ATank::Move);
 	PlayerInputComponent->BindAxis("Turn", this, &ATank::Turn);
+
+	// Action Mapping
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATank::Fire);
 }
 
 void ATank::Move(float Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%f"), Value);
+	// UE_LOG(LogTemp, Warning, TEXT("%f"), Value);
 	FVector DeltaLocation = FVector::ZeroVector;
 	DeltaLocation.X = Value * Speed * UGameplayStatics::GetWorldDeltaSeconds(this); // X = Value * Speed * DeltaTime
 	AddActorLocalOffset(DeltaLocation, true);
