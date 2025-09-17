@@ -38,14 +38,14 @@ void ATank::Tick(float DeltaTime)
 			false,
 			HitResult);
 
-		DrawDebugSphere(
-		      		GetWorld(),
-		      		HitResult.ImpactPoint,
-		      		25.f,
-		      		12,
-		      		FColor::Red,
-		      		false,
-		      		-1.f);
+		// DrawDebugSphere(
+		//       		GetWorld(),
+		//       		HitResult.ImpactPoint,
+		//       		25.f,
+		//       		12,
+		//       		FColor::Red,
+		//       		false,
+		//       		-1.f);
 
 		RotateTurret(HitResult.ImpactPoint);
 	}
@@ -84,6 +84,11 @@ void ATank::HandleDestruction()
 {
 	Super::HandleDestruction();
 
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
+
+	bAlive = false;
+	
 	UE_LOG(LogTemp, Warning, TEXT("Tank is dead!"));
 }
 

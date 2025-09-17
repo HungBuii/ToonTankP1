@@ -48,7 +48,7 @@ void AEnemy::CheckFireCondition()
 	{
 		return;
 	}
-	if (InFireRange())
+	if (InFireRange() && Tank->bAlive)
 	{
 		Fire();
 	}
