@@ -53,3 +53,10 @@ void AEnemy::CheckFireCondition()
 		Fire();
 	}
 }
+
+void AEnemy::HandleDestruction()
+{
+	Super::HandleDestruction();
+
+	Destroy();
+}

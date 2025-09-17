@@ -4,6 +4,7 @@
 #include "ToonTankGameMode.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "ToonTanks/Pawns/Enemy.h"
 #include "ToonTanks/Pawns/Tank.h"
 #include "ToonTanks/PlayerController/TankController.h"
 
@@ -17,6 +18,8 @@ void AToonTankGameMode::BeginPlay()
 
 void AToonTankGameMode::HandleGameStart()
 {
+	TargetEnemies = GetTargetEnemyCount();
+	
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 	
 	TankPlayerController = Cast<ATankController>(UGameplayStatics::GetPlayerController(this, 0));
@@ -40,6 +43,13 @@ void AToonTankGameMode::HandleGameStart()
 	}
 }
 
+int AToonTankGameMode::GetTargetEnemyCount()
+{
+	TArray<AActor*> Enenmies;
+	UGameplayStatics::GetAllActorsOfClass(this, AEnemy::StaticClass(), Enenmies);
+	return Enenmies.Num();
+}
+
 void AToonTankGameMode::ActorDied(AActor* DeadActor)
 {
 	if (DeadActor == Tank)
@@ -49,6 +59,13 @@ void AToonTankGameMode::ActorDied(AActor* DeadActor)
 		{
 			TankPlayerController->SetPlayerEnabledState(false);
 		}
+		GameOver(false);
 	}
-	
+	else if (AEnemy* DestroyedEnemy = Cast<AEnemy>(DeadActor))
+	{
+		DestroyedEnemy->HandleDestruction();
+		TargetEnemies--;
+		UKismetSystemLibrary::PrintString(this, "Tower Tank Alive: " + FString::FromInt(TargetEnemies));
+		if (TargetEnemies == 0) GameOver(true);
+	}
 }

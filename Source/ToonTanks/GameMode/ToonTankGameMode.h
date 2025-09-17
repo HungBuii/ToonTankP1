@@ -20,6 +20,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartGame();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void GameOver(bool bWonGame);
 	
 public:
 	void ActorDied(AActor* DeadActor);
@@ -32,4 +35,7 @@ private:
 	void HandleGameStart();
 
 	float StartDelay = 2.f;
+	
+	int TargetEnemies = 0;
+    int GetTargetEnemyCount();
 };
